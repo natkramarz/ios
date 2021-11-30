@@ -1,0 +1,4 @@
+credentials/*
+out/*
+__pycache__
+.idea
