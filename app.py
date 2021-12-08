@@ -6,7 +6,7 @@ from typing import List
 from formatter import format_as_json
 from get_all_data_from_spreadsheet import \
     get_all_data_from_spreadsheet_with_retry
-from get_all_spreadsheet_links import get_all_spreadsheet_links, SpreadSheet
+from get_all_spreadsheet_links import SpreadSheet, get_all_spreadsheet_links
 from parse import parse, pretty_print
 
 
@@ -39,8 +39,8 @@ def process(all_spreadsheets: List[SpreadSheet], valid_tables=[], incomplete=[],
 
 def download_and_append(valid_tables, incomplete, invalid, failed):
     to_redownload = [
-        SpreadSheet(url="", id="1teC_-moGab9rrDwYWYpuK31diBgpUGiY4ZaA8F3kcHw",
-                    gid="1885066752")
+        SpreadSheet(url="", id="1InT5CRO5KpC6C2Hb9kD7-OcvFcW-sh9hubnj3XECxww",
+                    gid="1516058266")
     ]
     process(to_redownload, valid_tables, incomplete, invalid, failed)
 
@@ -49,11 +49,15 @@ if __name__ == '__main__':
     all_spreadsheets, incomplete_links = get_all_spreadsheet_links()
     valid_tables, incomplete, invalid, failed = process(all_spreadsheets)
 
+    # valid_tables = []
+    # incomplete = []
+    # invalid = []
+    # failed = []
     download_and_append(valid_tables, incomplete, invalid, failed)
 
     json_str = format_as_json(valid_tables)
     with open("out/all_tables.json", "w") as out:
-        json.dump(json_str, out)
+        json.dump(json_str, out, indent=4)
 
     print("############################")
     print("Please check below information")

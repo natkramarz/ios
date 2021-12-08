@@ -40,6 +40,15 @@ def parse(rows) -> Table:
         if len(row) == 0:
             continue
         key = row[0]
+        found_columns_header = False
+        for column_i in range(0, len(row)):
+            if row[column_i] == 'Attribute Name':
+                column_definition_number = column_i + 1
+                columns_started = True
+                found_columns_header =True
+                break
+        if found_columns_header:
+            continue
         if key == "Table Name":
             column_definition_number = 4
         if columns_started:
@@ -56,9 +65,6 @@ def parse(rows) -> Table:
                     Column(full_name=column_name,
                            description=column_definition))
                 continue
-        if key == "Attribute Name" or key == "Dataset/Bucket":
-            columns_started = True
-            continue
         if key == "Object Name" or key == "Table Name":
             object_name = row[1].strip()
         if key.startswith("Dataset"):
