@@ -8,10 +8,10 @@ from get_all_data_from_spreadsheet import \
     get_all_data_from_spreadsheet_with_retry
 from get_all_spreadsheet_links import SpreadSheet, get_all_spreadsheet_links
 from parse import parse, pretty_print
+from datetime import date
 
-
-def process(all_spreadsheets: List[SpreadSheet], valid_tables=[], incomplete=[],
-    invalid=[], failed=[]):
+def process(all_spreadsheets: List[SpreadSheet],
+    valid_tables=[], incomplete=[], invalid=[], failed=[]):
     for spreadsheet in all_spreadsheets:
         try:
             print("Downloading all data for spreadsheet -> " + spreadsheet.url)
@@ -20,7 +20,7 @@ def process(all_spreadsheets: List[SpreadSheet], valid_tables=[], incomplete=[],
             table_info = parse(data)
 
             if table_info.is_valid():
-                valid_tables.append(table_info)
+                valid_tables.append((table_info, spreadsheet.url))
             else:
                 invalid.append((table_info, spreadsheet.url))
                 print("[INVALID]")
@@ -46,6 +46,7 @@ def download_and_append(valid_tables, incomplete, invalid, failed):
 
 
 if __name__ == '__main__':
+    fetch_date = date.today()
     all_spreadsheets, incomplete_links = get_all_spreadsheet_links()
     valid_tables, incomplete, invalid, failed = process(all_spreadsheets)
 
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     # failed = []
     download_and_append(valid_tables, incomplete, invalid, failed)
 
-    json_str = format_as_json(valid_tables)
+    json_str = format_as_json(valid_tables, fetch_date)
     with open("out/all_tables.json", "w") as out:
         json.dump(json_str, out, indent=4)
 
