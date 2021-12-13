@@ -1,14 +1,7 @@
 from datetime import date
 from typing import List, Tuple
 
-from parse import Table, Column
-
-
-def __column_as_json(field: Column):
-    return {
-        "fullName": field.full_name,
-        "description": field.description if field.description else ""
-    }
+from parse import Table
 
 
 def __table_as_json(table: Table, url: str, start_time: date):
@@ -17,7 +10,7 @@ def __table_as_json(table: Table, url: str, start_time: date):
         "spreadsheetUrl": url,
         "fetchedAt": start_time.isoformat(),
         "description": table.description if table.description else "",
-        "fields": {column.full_name: __column_as_json(column) for column in
+        "fields": {column.full_name: column.description for column in
                    table.columns}
     }
 

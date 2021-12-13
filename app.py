@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     json_str = format_as_json(valid_tables, fetch_date)
     with open("out/all_tables.json", "w") as out:
-        json.dump(json_str, out, indent=4)
+        json.dump(json_str, out, indent=2)
 
     print("############################")
     print("Please check below information")
