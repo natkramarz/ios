@@ -10,7 +10,7 @@ def __table_as_json(table: Table, url: str, start_time: date):
         "spreadsheetUrl": url,
         "uploadDate": start_time.isoformat(),
         "description": table.description if table.description else "",
-        "fields": {column.full_name: column.description for column in
+        "columnDescriptions": {column.full_name: column.description for column in
                    table.columns}
     }
 
