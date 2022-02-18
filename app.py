@@ -12,9 +12,12 @@ from datetime import date
 
 def process(all_spreadsheets: List[SpreadSheet],
     valid_tables=[], incomplete=[], invalid=[], failed=[]):
+    counter = 0
+    all_elements = len(all_spreadsheets)
     for spreadsheet in all_spreadsheets:
+        counter += 1
         try:
-            print("Downloading all data for spreadsheet -> " + spreadsheet.url)
+            print(f"""[{counter}/{all_elements}] Downloading all data for spreadsheet -> {spreadsheet.url}""")
             data = get_all_data_from_spreadsheet_with_retry(spreadsheet.id,
                                                             spreadsheet.gid)
             table_info = parse(data)
@@ -54,7 +57,7 @@ if __name__ == '__main__':
     # incomplete = []
     # invalid = []
     # failed = []
-    download_and_append(valid_tables, incomplete, invalid, failed)
+    # download_and_append(valid_tables, incomplete, invalid, failed)
 
     json_str = format_as_json(valid_tables, fetch_date)
     with open("out/all_tables.json", "w") as out:
