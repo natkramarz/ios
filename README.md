@@ -18,9 +18,13 @@ This script extract descriptions from all data dictionary spreadsheets.
    2. Click arrow button ("Download OAuth client") for `data dictionary dump`
    3. Download json, save this as `credentials/google-sheets-api-credentials.json`
 
-### Run
+### Run Data Dictionary extract
 ```bash
 mkdir -p out
 pipenv install
 pipenv run ./app.py
 ```
+
+### Check existence of tables from Data Dictionary
+
+Dedicated script `check_tables_exist.py` can be used to check if tables defined in data dictionary exists in project configured within the script. Script operates on the output of data dictionary extract and use user credentials to verify table existence.
