@@ -16,10 +16,9 @@ def verify_tables_existence(all_tables):
     for table_name, table_details in all_tables.items():
         try:
             client.get_table(f'{PROJECT_ID}.{table_name}')
-            print(f'{table_name} Exists')
+            # print(f'{table_name} Exist')
         except NotFound as e:
-            print(f'{table_name} Not Found')
-            print(table_details)
+            print(f'{table_name} - Not Found ({table_details["spreadsheetUrl"]})')
         except Exception as e:
             print(f'{table_name} Exception while resolving the table')
             print(table_details)

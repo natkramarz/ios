@@ -69,9 +69,7 @@ def parse(rows) -> Table:
             object_name = row[1].strip()
         if key.startswith("Dataset"):
             dataset = row[1].strip()
-        if key == "Definition":
-            definition = row[1]
-        if key == "Definition":
+        if key == "Definition" and row[1] != '<Give a definition of how the table should be used and why its been created>':
             definition = row[1]
     return Table(dataset=dataset, table_name=object_name,
                  description=definition,

@@ -22,7 +22,7 @@ def process(all_spreadsheets: List[SpreadSheet],
                                                             spreadsheet.gid)
             table_info = parse(data)
 
-            if table_info.is_valid():
+            if table_info.is_valid() and table_info.datasetAndName() != '<Dataset Name>.<Table/View Name>':
                 valid_tables.append((table_info, spreadsheet.url))
             else:
                 invalid.append((table_info, spreadsheet.url))
