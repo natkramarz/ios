@@ -4,8 +4,7 @@ import json
 from typing import List
 
 from formatter import format_as_json
-from get_all_data_from_spreadsheet import \
-    get_all_data_from_spreadsheet_with_retry
+from get_all_data_from_spreadsheet import get_all_data_from_spreadsheet
 from get_all_spreadsheet_links import SpreadSheet, get_all_spreadsheet_links
 from parse import parse, pretty_print
 from datetime import date
@@ -18,8 +17,7 @@ def process(all_spreadsheets: List[SpreadSheet],
         counter += 1
         try:
             print(f"""[{counter}/{all_elements}] Downloading all data for spreadsheet -> {spreadsheet.url}""")
-            data = get_all_data_from_spreadsheet_with_retry(spreadsheet.id,
-                                                            spreadsheet.gid)
+            data = get_all_data_from_spreadsheet(spreadsheet.id,spreadsheet.gid)
             table_info = parse(data)
 
             if table_info.is_valid() and table_info.datasetAndName() != '<Dataset Name>.<Table/View Name>':

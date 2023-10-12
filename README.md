@@ -15,8 +15,9 @@ This script extract descriptions from all data dictionary spreadsheets.
     ```
 3. Download json file with credentials to access spreadsheets API
    1. Go [here](https://console.cloud.google.com/apis/credentials?project=dev-atm-osp-datadiscovery-test)
-   2. Click arrow button ("Download OAuth client") for `data dictionary dump`
-   3. Download json, save this as `credentials/google-sheets-api-credentials.json`
+   2. Go [taco](https://euw1-taco.devtools.osp.tech/new-access-request/gcp-projects) and request for permission: CLIENT_AUTH_CONFIG_EDITOR on project: dev-atm-osp-datadiscovery-test
+   3. Click arrow button ("Download OAuth client") for `data dictionary dump`
+   4. Download json, save this as `credentials/google-sheets-api-credentials.json`
 
 ### Run Data Dictionary extract
 ```bash

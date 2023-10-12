@@ -1,16 +1,27 @@
-from time import sleep
+from http import HTTPStatus
 
 import gspread
+from gspread import BackoffClient
 
 from authenticate_to_google import authenticate_to_google
 
 client = None
 
 
+class CustomBackoffClient(BackoffClient):
+    """CustomBackoffClient extends BackoffClient with custom settings."""
+    _HTTP_ERROR_CODES = BackoffClient._HTTP_ERROR_CODES + [HTTPStatus.SERVICE_UNAVAILABLE,
+                                                           HTTPStatus.INTERNAL_SERVER_ERROR]
+    _MAX_BACKOFF = 128  # Custom maximum backoff setting
+
+    def __init__(self, auth):
+        super().__init__(auth)
+
+
 def create_client():
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
     credentials = authenticate_to_google(SCOPES)
-    return gspread.authorize(credentials)
+    return gspread.authorize(credentials, client_factory=CustomBackoffClient)
 
 
 def get_all_data_from_spreadsheet(id: str, gid: str):
@@ -31,28 +42,3 @@ def get_all_data_from_spreadsheet(id: str, gid: str):
             raise Exception(
                 "Spreadsheet has more than one sheet inside. Gid is invalid. Cannot determine which to use. Please do it manually")
     return worksheet.get_all_values()
-
-
-MAX_RETRY_NUMBER = 3
-
-
-def is_quota_exception(e: Exception):
-    try:
-        return e.args[0]['status'] == "RESOURCE_EXHAUSTED"
-    except:
-        return False
-
-def get_all_data_from_spreadsheet_with_retry(id: str, gid: str,
-    retry_number: int = 0):
-    try:
-        sleep(0.5)
-        return get_all_data_from_spreadsheet(id, gid)
-    except Exception as e:
-        print(" Error while getting data" + str(e))
-        if retry_number < MAX_RETRY_NUMBER and is_quota_exception(e):
-            next_retry_number = (retry_number + 1)
-            sleep(61 * next_retry_number)
-            return get_all_data_from_spreadsheet_with_retry(id, gid,
-                                                            retry_number + 1)
-        else:
-            raise e
