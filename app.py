@@ -9,6 +9,7 @@ from get_all_spreadsheet_links import SpreadSheet, get_all_spreadsheet_links
 from parse import parse, pretty_print
 from datetime import date
 
+
 def process(all_spreadsheets: List[SpreadSheet],
     valid_tables=[], incomplete=[], invalid=[], failed=[]):
     counter = 0
@@ -20,7 +21,7 @@ def process(all_spreadsheets: List[SpreadSheet],
             data = get_all_data_from_spreadsheet(spreadsheet.id,spreadsheet.gid)
             table_info = parse(data)
 
-            if table_info.is_valid() and table_info.datasetAndName() != '<Dataset Name>.<Table/View Name>':
+            if table_info.is_valid() and table_info.dataset_and_name() != '<Dataset Name>.<Table/View Name>':
                 valid_tables.append((table_info, spreadsheet.url))
             else:
                 invalid.append((table_info, spreadsheet.url))
@@ -34,7 +35,6 @@ def process(all_spreadsheets: List[SpreadSheet],
             print("[FAILED]")
             print(str(e))
             failed.append((spreadsheet.url, str(e)))
-
     return valid_tables, incomplete, invalid, failed
 
 

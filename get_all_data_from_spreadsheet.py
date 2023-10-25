@@ -12,7 +12,7 @@ class CustomBackoffClient(BackoffClient):
     """CustomBackoffClient extends BackoffClient with custom settings."""
     _HTTP_ERROR_CODES = BackoffClient._HTTP_ERROR_CODES + [HTTPStatus.SERVICE_UNAVAILABLE,
                                                            HTTPStatus.INTERNAL_SERVER_ERROR]
-    _MAX_BACKOFF = 128  # Custom maximum backoff setting
+    _MAX_BACKOFF = 600000  # Custom maximum backoff setting
 
     def __init__(self, auth):
         super().__init__(auth)

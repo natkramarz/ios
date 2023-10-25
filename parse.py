@@ -1,21 +1,30 @@
 import dataclasses
-from typing import List
+from typing import List, Dict, Optional, Any
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Column:
     full_name: str
     description: str
+    enumeration: List[str] | None
+    data_type: str | None
+    nullable: bool | None
+    anonymize: bool | None
+    example_value: str | None
 
 
 @dataclasses.dataclass
 class Table:
-    dataset: str
-    table_name: str
-    description: str
-    columns: List[Column]
+    dataset: Optional[str] = None
+    table_name: Optional[str] = None
+    description: Optional[str] = None
+    classification: Optional[str] = None
+    type: Optional[str] = None
+    frequency: Optional[str] = None
+    version: Optional[str] = None
+    columns: Optional[List[Column]] = None
 
-    def datasetAndName(self):
+    def dataset_and_name(self):
         if not self.dataset or not self.table_name:
             return "UNKNOWN"
         return self.dataset + "." + self.table_name
@@ -28,57 +37,158 @@ class Table:
             self.columns) > 0
 
 
+def _parse_enum_column_value_in_row(
+        row: List[str], column_name: str, column_indices: Dict[str, int]):
+    field = _parse_column_value_in_row(row, column_name, column_indices)
+    if field is None:
+        return None
+    enumerations_without_new_lines = field.split('\n')
+    enumerations_without_commas = []
+    for enumeration in enumerations_without_new_lines:
+        enumerations_without_commas.extend(enumeration.split(','))
+
+    enumerations_without_quotes = []
+    for enumeration in enumerations_without_commas:
+        enumeration = enumeration.replace('"', '')
+        enumerations_without_quotes.append(enumeration.strip())
+    enumerations_without_empty_values = [item.strip() for item
+                                         in enumerations_without_quotes
+                                         if item != ""]
+    if len(enumerations_without_empty_values) == 0:
+        return None
+    return enumerations_without_empty_values
+
+
+def _parse_bool_column_value_in_row(
+        row: List[str], column_name: str, column_indices: Dict[str, int]):
+    field = _parse_column_value_in_row(row, column_name, column_indices)
+    if field is None:
+        return None
+    elif field.lower() in ['y', 'yes', 'on', '1', 'true']:
+        return True
+    elif field.lower() in ['n', 'no', 'off', '0', 'false']:
+        return False
+    else:
+        return None
+
+
+def _parse_column_value_in_row(row: List[str], column_name: str, column_indices: Dict[str, int]):
+    if column_name not in column_indices:
+        return None
+    field = row[column_indices[column_name]].strip()
+    if field == '-' or field == "":
+        return None
+    return row[column_indices[column_name]]
+
+
+def _extract_to_column(column_indices: Dict[Any, int], column_name: str, row: Any) -> Column:
+    column_definition = _parse_column_value_in_row(
+        row=row,
+        column_name='Definition',
+        column_indices=column_indices
+    )
+    column_enumeration = _parse_enum_column_value_in_row(
+        row=row,
+        column_name='Enumeration',
+        column_indices=column_indices
+    )
+    column_data_type = _parse_column_value_in_row(
+        row=row, column_name='Data Type',
+        column_indices=column_indices
+    )
+    column_nullable = _parse_bool_column_value_in_row(
+        row=row, column_name='Nullable?',
+        column_indices=column_indices
+    )
+    column_anonymize = _parse_bool_column_value_in_row(
+        row=row, column_name='Anonymise',
+        column_indices=column_indices
+    )
+    column_example_value = _parse_column_value_in_row(
+        row=row, column_name='Example Values',
+        column_indices=column_indices
+    )
+    return Column(full_name=column_name,
+                  description=column_definition,
+                  enumeration=column_enumeration,
+                  data_type=column_data_type,
+                  nullable=column_nullable,
+                  anonymize=column_anonymize,
+                  example_value=column_example_value)
+
+
+def _extract_table_column_name(column_name: str, last_full_column_name: str):
+    if column_name.startswith("."):
+        # lstrip usedfor cases with multiple dots at the begining
+        column_name = last_full_column_name + "." + column_name.lstrip(
+            '.')
+    else:
+        last_full_column_name = column_name
+    return column_name, last_full_column_name
+
+
+def _extract_to_table(table_def_column_value: Dict[str, str], columns: List[Column]) -> Table:
+    table = Table()
+    table_attributes_accurate = {
+        'Object Name': 'table_name',
+        'Table Name': 'table_name',
+        'Frequency': 'frequency',
+        'Object Type': 'type',
+        'Object Classification': 'classification',
+        'Version': 'version'
+    }
+
+    for table_column_name, table_column_value in table_def_column_value.items():
+        if table_column_name in table_attributes_accurate:
+            setattr(table, table_attributes_accurate[table_column_name], table_column_value.strip())
+        elif table_column_name.startswith("Dataset"):
+            table.dataset = table_column_value.strip()
+        elif table_column_name == "Definition" and table_column_value != '<Give a definition of how the table should be used and why its been created>':
+            table.description = table_column_value
+
+    table.columns = columns
+    return table
+
+
 def parse(rows) -> Table:
-    object_name = None
-    dataset = None
-    definition = ''
-    column = []
+    columns = []
     columns_started = False
-    column_definition_number = 1
-    last_full_column_name = ""
+    column_indices = {}
+    last_full_table_column_name = ""
+    table_def_column_value: Dict[str, str] = {}
     for row in rows:
-        if len(row) == 0:
+        if row is None or len(row) == 0:
             continue
-        key = row[0]
         found_columns_header = False
+        if not columns_started:
+            table_def_column_value[row[0]] = row[1]
         for column_i in range(0, len(row)):
             if row[column_i] == 'Attribute Name':
-                column_definition_number = column_i + 1
                 columns_started = True
-                found_columns_header =True
+                found_columns_header = True
+                for column_names_index in range(column_i, len(row)):
+                    column_indices[row[column_names_index]] = column_names_index
                 break
         if found_columns_header:
             continue
-        if key == "Table Name":
-            column_definition_number = 4
         if columns_started:
-            column_name = row[column_definition_number - 1].strip()
-            if len(column_name) > 0:
-                if column_name.startswith("."):
-                    # lstrip usedfor cases with multiple dots at the begining
-                    column_name = last_full_column_name + "." + column_name.lstrip(
-                        '.')
-                else:
-                    last_full_column_name = column_name
-                column_definition = row[column_definition_number]
-                column.append(
-                    Column(full_name=column_name,
-                           description=column_definition))
-                continue
-        if key == "Object Name" or key == "Table Name":
-            object_name = row[1].strip()
-        if key.startswith("Dataset"):
-            dataset = row[1].strip()
-        if key == "Definition" and row[1] != '<Give a definition of how the table should be used and why its been created>':
-            definition = row[1]
-    return Table(dataset=dataset, table_name=object_name,
-                 description=definition,
-                 columns=column)
+            table_column_name = _parse_column_value_in_row(
+                row=row, column_name='Attribute Name',
+                column_indices=column_indices
+            )
+            if table_column_name:
+                table_column_name, last_full_table_column_name = _extract_table_column_name(table_column_name,
+                                                                                            last_full_table_column_name)
+                column = _extract_to_column(column_indices=column_indices,
+                                            column_name=table_column_name,
+                                            row=row)
+                columns.append(column)
+    return _extract_to_table(table_def_column_value, columns)
 
 
 def pretty_print(table: Table):
     print("=== TABLE ===")
-    print("name:        " + table.datasetAndName())
+    print("name:        " + table.dataset_and_name())
     print("description: " + str(table.description))
     print("columns:")
     for column in table.columns:
