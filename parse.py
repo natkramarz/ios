@@ -160,8 +160,6 @@ def parse(rows) -> Table:
         if row is None or len(row) == 0:
             continue
         found_columns_header = False
-        if not columns_started:
-            table_def_column_value[row[0]] = row[1]
         for column_i in range(0, len(row)):
             if row[column_i] == 'Attribute Name':
                 columns_started = True
@@ -183,6 +181,8 @@ def parse(rows) -> Table:
                                             column_name=table_column_name,
                                             row=row)
                 columns.append(column)
+        else:
+            table_def_column_value[row[0]] = row[1]
     return _extract_to_table(table_def_column_value, columns)
 
 
