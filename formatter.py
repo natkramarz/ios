@@ -8,8 +8,9 @@ def _column_attribute(column: Column):
     column_attributes = {}
     if column.full_name:
         column_attributes['fullName'] = column.full_name
-    if column.description:
-        column_attributes['description'] = column.description
+
+    column_attributes['description'] = column.description
+
     if column.enumeration:
         column_attributes["enumeration"] = column.enumeration
     if column.data_type:
@@ -20,6 +21,7 @@ def _column_attribute(column: Column):
         column_attributes["isAnonymized"] = column.anonymize
     if column.example_value:
         column_attributes["exampleValue"] = column.example_value
+
     return column_attributes
 
 

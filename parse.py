@@ -23,6 +23,7 @@ class Table:
     frequency: Optional[str] = None
     version: Optional[str] = None
     columns: Optional[List[Column]] = None
+    warnings: Optional[List[str]] = None
 
     def dataset_and_name(self):
         if not self.dataset or not self.table_name:
@@ -36,9 +37,12 @@ class Table:
         return self.dataset and self.table_name and self.description and len(
             self.columns) > 0
 
+    def has_warnings(self):
+        return len(self.warnings) > 0
+
 
 def _parse_enum_column_value_in_row(
-        row: List[str], column_name: str, column_indices: Dict[str, int]):
+    row: List[str], column_name: str, column_indices: Dict[str, int]):
     field = _parse_column_value_in_row(row, column_name, column_indices)
     if field is None:
         return None
@@ -60,7 +64,7 @@ def _parse_enum_column_value_in_row(
 
 
 def _parse_bool_column_value_in_row(
-        row: List[str], column_name: str, column_indices: Dict[str, int]):
+    row: List[str], column_name: str, column_indices: Dict[str, int]):
     field = _parse_column_value_in_row(row, column_name, column_indices)
     if field is None:
         return None
@@ -78,7 +82,7 @@ def _parse_column_value_in_row(row: List[str], column_name: str, column_indices:
     field = row[column_indices[column_name]].strip()
     if field == '-' or field == "":
         return None
-    return row[column_indices[column_name]]
+    return field
 
 
 def _extract_to_column(column_indices: Dict[Any, int], column_name: str, row: Any) -> Column:
@@ -86,7 +90,7 @@ def _extract_to_column(column_indices: Dict[Any, int], column_name: str, row: An
         row=row,
         column_name='Definition',
         column_indices=column_indices
-    )
+    ) or ''
     column_enumeration = _parse_enum_column_value_in_row(
         row=row,
         column_name='Enumeration',
@@ -117,17 +121,25 @@ def _extract_to_column(column_indices: Dict[Any, int], column_name: str, row: An
                   example_value=column_example_value)
 
 
-def _extract_table_column_name(column_name: str, last_full_column_name: str):
-    if column_name.startswith("."):
-        # lstrip usedfor cases with multiple dots at the begining
-        column_name = last_full_column_name + "." + column_name.lstrip(
-            '.')
+def _extract_table_column_name(column_name: str, ascendant_column_name_list: List[str]):
+    current_column_depth = len(column_name) - len(column_name.lstrip("."))
+
+    if current_column_depth:
+        stripped_column_name = column_name.lstrip('.')
+        ascendant_depth = len(ascendant_column_name_list) - 1
+
+        if current_column_depth <= ascendant_depth:
+            ascendant_column_name_list = ascendant_column_name_list[:current_column_depth]
+
+        ascendant_column_name_list.append(stripped_column_name)
+        column_name = ".".join(ascendant_column_name_list)
     else:
-        last_full_column_name = column_name
-    return column_name, last_full_column_name
+        ascendant_column_name_list = [column_name]
+
+    return column_name, ascendant_column_name_list
 
 
-def _extract_to_table(table_def_column_value: Dict[str, str], columns: List[Column]) -> Table:
+def _extract_to_table(table_def_column_value: Dict[str, str], columns: List[Column], warnings: List[str]) -> Table:
     table = Table()
     table_attributes_accurate = {
         'Object Name': 'table_name',
@@ -147,14 +159,17 @@ def _extract_to_table(table_def_column_value: Dict[str, str], columns: List[Colu
             table.description = table_column_value
 
     table.columns = columns
+    table.warnings = warnings
+
     return table
 
 
 def parse(rows) -> Table:
     columns = []
+    warnings = []
     columns_started = False
     column_indices = {}
-    last_full_table_column_name = ""
+    ascendant_column_name_list = []
     table_def_column_value: Dict[str, str] = {}
     for row in rows:
         if row is None or len(row) == 0:
@@ -175,15 +190,19 @@ def parse(rows) -> Table:
                 column_indices=column_indices
             )
             if table_column_name:
-                table_column_name, last_full_table_column_name = _extract_table_column_name(table_column_name,
-                                                                                            last_full_table_column_name)
+                table_column_name, ascendant_column_name_list = _extract_table_column_name(table_column_name, ascendant_column_name_list)
                 column = _extract_to_column(column_indices=column_indices,
                                             column_name=table_column_name,
                                             row=row)
-                columns.append(column)
+                column_already_present = any(obj.full_name == table_column_name for obj in columns)
+
+                if not column_already_present:
+                    columns.append(column)
+                else:
+                    warnings.append("SKIPPING COLUMN WITH DUPLICATE COLUM NAME '" + table_column_name + "'")
         else:
             table_def_column_value[row[0]] = row[1]
-    return _extract_to_table(table_def_column_value, columns)
+    return _extract_to_table(table_def_column_value, columns, warnings)
 
 
 def pretty_print(table: Table):
