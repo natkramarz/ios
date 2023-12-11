@@ -44,7 +44,7 @@ class Table:
 def _parse_enum_column_value_in_row(
     row: List[str], column_name: str, column_indices: Dict[str, int]):
     field = _parse_column_value_in_row(row, column_name, column_indices)
-    if field is None:
+    if field is None or field.strip() == '#REF!':
         return None
     enumerations_without_new_lines = field.split('\n')
     enumerations_without_commas = []
