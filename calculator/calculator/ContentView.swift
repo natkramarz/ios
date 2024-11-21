@@ -13,14 +13,39 @@ struct ContentView: View {
             storedValue = Double(input)
             input = ""
         case ",":
-            if !display.contains(",") {
+            if !display.contains(".") {
                 input += button.label
             }
         case "=":
-            print("need to present result")
-            print("handle errors")
+            if let storedValue = storedValue,
+                let currInput = Double(input) {
+                let result: Double
+                
+                switch operation {
+                case "+":
+                    result = storedValue + currInput
+                case "-":
+                    result = storedValue - currInput
+                case "*":
+                    result = storedValue * currInput
+                case "/":
+                    if currInput != 0 {
+                        result = storedValue / currInput
+                    } else {
+                        result = 0
+                    }
+                default:
+                    fatalError("Unknown error")
+                }
+                input = "\(result)"
+                operation = nil
+            }
+        case "AC":
+            display = "0"
+            input = ""
+            operation = nil
         default:
-            if input.count < 9 {
+            if display.count < 9 {
                 input += button.label
             }
         }
@@ -54,7 +79,7 @@ struct ContentView: View {
                     ButtonInfo(label: "7", backgroundColor: .gray, foregroundColor: .white),
                     ButtonInfo(label: "8", backgroundColor: .gray, foregroundColor: .white),
                     ButtonInfo(label: "9", backgroundColor: .gray, foregroundColor: .white),
-                    ButtonInfo(label: "x", backgroundColor: .orange,  foregroundColor: .white),
+                    ButtonInfo(label: "*", backgroundColor: .orange,  foregroundColor: .white),
                 ], action: onClick)
                     
                 ButtonRow(buttons: [
@@ -73,7 +98,7 @@ struct ContentView: View {
                 ], action: onClick)
                 ButtonRow(buttons: [
                     ButtonInfo(label: "0", backgroundColor: .gray, foregroundColor: .white),
-                    ButtonInfo(label: ",", backgroundColor: .gray, foregroundColor: .white),
+                    ButtonInfo(label: ".", backgroundColor: .gray, foregroundColor: .white),
                     ButtonInfo(label: "=", backgroundColor: .orange,  foregroundColor: .white),
                     ButtonInfo(label: "/", backgroundColor: .orange, foregroundColor: .white),
                 ], action: onClick)
