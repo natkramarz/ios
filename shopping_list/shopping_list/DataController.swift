@@ -11,33 +11,27 @@ class DataController: ObservableObject {
                 print("Core Data failed to load: \(error.localizedDescription)")
             }
         }
-        //preloadData()
+        self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        preloadData()
     }
     
     private func preloadData() {
         let context = container.viewContext
-        let fetchRequest: NSFetchRequest<Product> = Product.fetchRequest()
-        do {
-            let count = try context.count(for: fetchRequest)
-            if count == 0 {
-                loadDefaultData(context: context)
-            }
-        } catch {
-            print("Error checking data store: \(error.localizedDescription)")
-        }
-    }
-    
-    private func loadDefaultData(context: NSManagedObjectContext) {
+        let category1 = Category(context: context)
+        category1.name = "Category 1"
+        
+        
         let product1 = Product(context: context)
-        product1.id = UUID()
         product1.name = "Product 1"
+        product1.category = category1
         
         let product2 = Product(context: context)
-        product2.id = UUID()
         product2.name = "Product 2"
+        product2.category = category1
+        
+        category1.product = [product1, product2]
         
         let product3 = Product(context: context)
-        product3.id = UUID()
         product3.name = "Product 3"
         
         do {
