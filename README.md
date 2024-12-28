@@ -12,6 +12,8 @@
 
 ❌ 5.0 Wersja ma się skalować na tablet
 
+Kod: [/calculator](https://github.com/natkramarz/ios/tree/main/calculator)
+
 https://github.com/user-attachments/assets/580eef81-16be-4f65-b6f1-ea5c82b4a3a1
 
 ## Zadanie 2 - Lista zadań 
@@ -25,6 +27,8 @@ https://github.com/user-attachments/assets/580eef81-16be-4f65-b6f1-ea5c82b4a3a1
 ✅ 4.5 zmiana statusu zadania (w tym modyfikacja struktury)
 
 ✅ 5.0 wyświetlanie statusu na liście zadań
+
+Kod: [/todo](https://github.com/natkramarz/ios/tree/main/todo)
 
 https://github.com/user-attachments/assets/755419e3-7e28-48db-b09b-046e3ba8a46c
 
