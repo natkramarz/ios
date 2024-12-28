@@ -32,4 +32,16 @@ Kod: [/todo](https://github.com/natkramarz/ios/tree/main/todo)
 
 https://github.com/user-attachments/assets/755419e3-7e28-48db-b09b-046e3ba8a46c
 
+## Zadanie 3 - Lista zakupów
 
+✅ 3.0 stworzenie modelów Produktów oraz Kategorii w Core Data
+
+✅ 3.5 załadować dane przy uruchomieniu aplikacji (Fixtures)
+
+4.0 stworzyć listę produktów z podstroną opisu produktu na nowym widoku (dane z core data)
+
+4.5 opcja dodania produktu do koszyka (tabview)
+
+5.0 dodanie więcej niż jeden produkt tego samego typu do koszyka
+
+Kod: [/shopping_list](https://github.com/natkramarz/ios/tree/main/shopping_list)
