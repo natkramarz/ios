@@ -2,15 +2,30 @@
 
 ## Zadanie 1 - Kalkulator 
 
-✅ <= 4.0 [commit link](https://github.com/natkramarz/ios/commit/2c189198619154c1980cba5a1654038800543d19) i [commit link](https://github.com/natkramarz/ios/commit/adda4654332b67d762afa70942d30ddfe8cf7a74)
+✅ 3.0 Należy stworzyć prosty kalkulator z dodawaniem + opcja czyszczenia wyniku + przycisku wyniku
+
+✅ 3.5 Należy dodać pozostałe operacje: mnożenie, dzielenie oraz odejmowanie
+
+❌ 4.0 Należy dodać obsługę kolejnych działań na wyniku
+
+❌ 4.5 Należy dodać procent, znak ujemny, logarytm oraz potęgę
+
+
+:cross_5.0 Wersja ma się skalować na tablet
 
 https://github.com/user-attachments/assets/580eef81-16be-4f65-b6f1-ea5c82b4a3a1
 
 ## Zadanie 2 - Lista zadań 
 
-✅ <= 4.0 [commit link](https://github.com/natkramarz/ios/commit/aff03cd113f9b7067b57d5a89a0f3ce4c2f2d6cc)
+✅ 3.0 wyświetla listę z góry określonych zadań (ArrayList)
 
-✅ 4.5 i 5.0 [commit link](https://github.com/natkramarz/ios/commit/f7ea9ea4ca6c1996771d9a9713958a6b37df742c)
+✅ 3.5 wyswietlanie obrazu na widoku zadania
+
+✅ 4.0 usuwanie (swipe) zadań
+
+✅ 4.5 zmiana statusu zadania (w tym modyfikacja struktury)
+
+✅ 5.0 wyświetlanie statusu na liście zadań
 
 https://github.com/user-attachments/assets/755419e3-7e28-48db-b09b-046e3ba8a46c
 
