@@ -6,7 +6,7 @@
 
 ✅ 3.5 Należy dodać pozostałe operacje: mnożenie, dzielenie oraz odejmowanie
 
-❌ 4.0 Należy dodać obsługę kolejnych działań na wyniku
+✅ 4.0 Należy dodać obsługę kolejnych działań na wyniku
 
 ❌ 4.5 Należy dodać procent, znak ujemny, logarytm oraz potęgę
 
