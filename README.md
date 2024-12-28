@@ -10,8 +10,7 @@
 
 ❌ 4.5 Należy dodać procent, znak ujemny, logarytm oraz potęgę
 
-
-:cross_5.0 Wersja ma się skalować na tablet
+❌ 5.0 Wersja ma się skalować na tablet
 
 https://github.com/user-attachments/assets/580eef81-16be-4f65-b6f1-ea5c82b4a3a1
 
