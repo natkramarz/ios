@@ -27,7 +27,6 @@ extension Product {
     public var wrappedPrice: Decimal {
         price as? Decimal ?? Decimal(0)
     }
-
 }
 
 extension Product : Identifiable {
