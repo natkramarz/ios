@@ -40,8 +40,12 @@ https://github.com/user-attachments/assets/755419e3-7e28-48db-b09b-046e3ba8a46c
 
 ✅ 4.0 stworzyć listę produktów z podstroną opisu produktu na nowym widoku (dane z core data)
 
-4.5 opcja dodania produktu do koszyka (tabview)
+✅ 4.5 opcja dodania produktu do koszyka (tabview)
 
-5.0 dodanie więcej niż jeden produkt tego samego typu do koszyka
+✅ 5.0 dodanie więcej niż jeden produkt tego samego typu do koszyka
 
 Kod: [/shopping_list](https://github.com/natkramarz/ios/tree/main/shopping_list)
+
+https://github.com/user-attachments/assets/f604b40d-ef6f-4a58-b802-6b3056a626c5
+
+
