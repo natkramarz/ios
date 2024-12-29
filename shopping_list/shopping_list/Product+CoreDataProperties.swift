@@ -18,9 +18,14 @@ extension Product {
 
     @NSManaged public var name: String?
     @NSManaged public var category: Category?
+    @NSManaged public var price: NSDecimalNumber?
     
     public var wrappedName: String {
         name ?? "Unknown Product"
+    }
+    
+    public var wrappedPrice: Decimal {
+        price as? Decimal ?? Decimal(0)
     }
 
 }

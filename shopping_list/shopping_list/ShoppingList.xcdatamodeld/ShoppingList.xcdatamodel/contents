@@ -11,6 +11,7 @@
     </entity>
     <entity name="Product" representedClassName="Product" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="product" inverseEntity="Category"/>
         <uniquenessConstraints>
             <uniquenessConstraint>

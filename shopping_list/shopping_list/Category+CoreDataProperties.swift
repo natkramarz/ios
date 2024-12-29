@@ -20,7 +20,7 @@ extension Category {
     @NSManaged public var product: NSSet?
     
     public var wrappedName: String {
-        name ?? "AAAA"
+        name ?? "Unknown Category"
     }
     
     public var productArray: [Product] {
