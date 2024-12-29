@@ -16,7 +16,7 @@ class ShoppingCart: ObservableObject {
             if let currentCount = items[product], currentCount > 1 {
                 items[product] = (items[product] ?? 0) - 1
             } else {
-                items[product] = 0
+                items[product] = nil
             }
         }
 }
