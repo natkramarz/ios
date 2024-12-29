@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/755419e3-7e28-48db-b09b-046e3ba8a46c
 
 ✅ 3.5 załadować dane przy uruchomieniu aplikacji (Fixtures)
 
-4.0 stworzyć listę produktów z podstroną opisu produktu na nowym widoku (dane z core data)
+✅ 4.0 stworzyć listę produktów z podstroną opisu produktu na nowym widoku (dane z core data)
 
 4.5 opcja dodania produktu do koszyka (tabview)
 
