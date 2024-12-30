@@ -93,7 +93,6 @@ struct ContentView: View {
                 .tabItem {
                     Label("Order", systemImage: "square.and.pencil")
                 }
-                
             }
     }
 }

@@ -17,30 +17,40 @@ class DataController: ObservableObject {
     
     private func preloadData() {
         let context = container.viewContext
-        let category1 = Category(context: context)
-        category1.name = "Category 1"
+        deleteAllData(entityName: "Category", context: context)
+        deleteAllData(entityName: "Product", context: context)
         
-        
-        let product1 = Product(context: context)
-        product1.name = "Product 1"
-        product1.price = 12.5
-        product1.category = category1
-        
-        let product2 = Product(context: context)
-        product2.name = "Product 2"
-        product2.price = 7.0
-        product2.category = category1
-        
-        category1.product = [product1, product2]
-        
-        let product3 = Product(context: context)
-        product3.price = 3.80
-        product3.name = "Product 3"
+        ProductsApi().getProducts { CategoriesResponse in
+            for category in CategoriesResponse.categories {
+                let currCategory = Category(context: context)
+                currCategory.name = category.name
+                
+                for product in category.products {
+                    let currProduct = Product(context: context)
+                    currProduct.name = product.name
+                    currProduct.price = product.price as NSDecimalNumber?
+                    currProduct.category = currCategory
+                }
+            }
+        }
         
         do {
             try context.save()
         } catch {
             print("Failed to save default data: \(error.localizedDescription)")
+        }
+    }
+    
+    func deleteAllData(entityName: String, context: NSManagedObjectContext) {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(batchDeleteRequest)
+            try context.save()
+            print("All items in \(entityName) were deleted.")
+        } catch {
+            print("Failed to delete items from \(entityName): \(error)")
         }
     }
 }

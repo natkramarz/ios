@@ -12,5 +12,5 @@ struct shopping_listApp: App {
                     .environment(\.managedObjectContext, dataController.container.viewContext)
                     .environmentObject(cart)
             }
-        }
+    }
 }
