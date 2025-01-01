@@ -50,9 +50,9 @@ https://github.com/user-attachments/assets/f604b40d-ef6f-4a58-b802-6b3056a626c5
 
 ## Zadanie 4 - Sieć
 
-3.0 pobieranie produktów oraz kategorii z aplikacji serwerowej
+✅ 3.0 pobieranie produktów oraz kategorii z aplikacji serwerowej
 
-3.5 zapis danych lokalnie (CoreData)
+✅ 3.5 zapis danych lokalnie (CoreData)
 
 4.0 pobieranie dodatkowo zamówień (minimum 5 pól, w tym jedna relacja)
 
