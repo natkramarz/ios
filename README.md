@@ -54,11 +54,13 @@ https://github.com/user-attachments/assets/f604b40d-ef6f-4a58-b802-6b3056a626c5
 
 ✅ 3.5 zapis danych lokalnie (CoreData)
 
-4.0 pobieranie dodatkowo zamówień (minimum 5 pól, w tym jedna relacja)
+❌ 4.0 pobieranie dodatkowo zamówień (minimum 5 pól, w tym jedna relacja)
 
-4.5 wyświetlanie produktów oraz ich kategorii na dwóch osobnych listach
+❌ 4.5 wyświetlanie produktów oraz ich kategorii na dwóch osobnych listach
 
-5.0 dodawanie produktów z poziomu aplikacji mobilnej
+❌ 5.0 dodawanie produktów z poziomu aplikacji mobilnej
+
+https://github.com/user-attachments/assets/3b03345e-418e-4de3-a7ef-e64d089e3a2b
 
 ## Zadanie 5 - Oauth
 
