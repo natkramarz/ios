@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uuid
 
@@ -80,4 +80,35 @@ async def place_order(order: Order):
 async def ger_orders():
     return {"orders": orders}
 
+users = {
 
+}
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+
+@app.post("/login")
+async def login(request: LoginRequest):
+    if request.username in users and users[request.username] == request.password:
+        return {
+            "message": "Login successful",
+            "token": "mock_token_123456" 
+        }
+    else:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+
+@app.post("/register")
+async def register(request: RegisterRequest):
+    users[request.username] = request.password
+    print(users)
+    return {
+            "message": "Register successful",
+            "token": "mock_token_123456" 
+    }
