@@ -17,6 +17,7 @@ extension Product {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var id: String
     @NSManaged public var category: Category?
     @NSManaged public var price: NSDecimalNumber?
     
@@ -26,6 +27,10 @@ extension Product {
     
     public var wrappedPrice: Decimal {
         price as? Decimal ?? Decimal(0)
+    }
+    
+    func toApiProduct() -> ProductsApi.Product {
+        return ProductsApi.Product(id: UUID(uuidString: self.id)!, name: self.wrappedName, price: self.wrappedPrice)
     }
 }
 

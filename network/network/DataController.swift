@@ -27,6 +27,7 @@ class DataController: ObservableObject {
                 
                 for product in category.products {
                     let currProduct = Product(context: context)
+                    currProduct.id = product.id.uuidString
                     currProduct.name = product.name
                     currProduct.price = product.price as NSDecimalNumber?
                     currProduct.category = currCategory

@@ -2,6 +2,8 @@ import SwiftUI
 
 struct CartView: View {
     @EnvironmentObject var cart: ShoppingCart
+    @State private var confirmationMessage = ""
+    @State private var showingConfirmation = false
     
     var body: some View {
         NavigationStack {
@@ -26,9 +28,46 @@ struct CartView: View {
                     Text("Total: \(String(format: "%.2f", Double(truncating: totalCost as NSNumber)))$")
                         .font(.headline)
                         .padding()
+                    Button("Place Order") {
+                        Task {
+                            await placeOrder()
+                        }
+                    }
                 }
                 .navigationTitle("Your Cart")
+                .alert("Thank you!", isPresented: $showingConfirmation) {
+                    Button("OK") { }
+                } message: {
+                    Text(confirmationMessage)
+                }
             }
+    }
+    
+    func placeOrder() async {
+        var apiItems: [String: Int] = [:]
+        for (product, quantity) in cart.items {
+            let id = product.id
+            apiItems[id] = quantity
+        }
+        let order = Order(items: apiItems)
+        guard let encoded = try? JSONEncoder().encode(order) else {
+            print("Failed to encode order")
+            return
+        }
+        
+        let url = URL(string: "http://127.0.0.1:8000/orders")!
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        
+        do {
+            let (data, _) = try await URLSession.shared.upload(for: request, from: encoded)
+            let decodedOrder = try JSONDecoder().decode(Order.self, from: data)
+            confirmationMessage = "Your order \(decodedOrder.id) is on its way!"
+            showingConfirmation = true
+        } catch {
+            print("Checkout failed: \(error.localizedDescription)")
+        }
     }
 }
 

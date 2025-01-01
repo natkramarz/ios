@@ -49,16 +49,13 @@ class ProductsApi {
         let products: [Product]
     }
 
-    struct Product: Codable, Identifiable {
-        let id: String
+    struct Product: Codable, Identifiable, Hashable {
+        let id: UUID
         let name: String
         let price: Decimal
-        let description: String
-        let imageUrl: String
         
         enum CodingKeys: String, CodingKey {
-                case id, name, price, description
-                case imageUrl = "image_url"
-            }
+                case id, name, price
+        }
     }
 }
