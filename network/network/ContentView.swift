@@ -49,10 +49,20 @@ struct CartView: View {
             let id = product.id
             apiItems[id] = quantity
         }
-        let order = Order(items: apiItems)
-        guard let encoded = try? JSONEncoder().encode(order) else {
+        let payment = Order.Payment(status: .pending, method: .cash)
+        let order = Order(items: apiItems, payment: payment)
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601 
+
+        guard let encoded = try? encoder.encode(order) else {
             print("Failed to encode order")
             return
+        }
+    
+        
+        if let jsonString = String(data: encoded, encoding: .utf8) {
+                print("JSON String: \(jsonString)")
         }
         
         let url = URL(string: "http://127.0.0.1:8000/orders")!
@@ -62,11 +72,16 @@ struct CartView: View {
         
         do {
             let (data, _) = try await URLSession.shared.upload(for: request, from: encoded)
-            let decodedOrder = try JSONDecoder().decode(Order.self, from: data)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let decodedOrder = try decoder.decode(Order.self, from: data)
             confirmationMessage = "Your order \(decodedOrder.id) is on its way!"
             showingConfirmation = true
         } catch {
-            print("Checkout failed: \(error.localizedDescription)")
+            print("Checkout failed: \(error)")
+                if let decodingError = error as? DecodingError {
+                    print("Decoding Error: \(decodingError)")
+                }
         }
     }
 }
