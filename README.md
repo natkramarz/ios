@@ -54,7 +54,7 @@ https://github.com/user-attachments/assets/f604b40d-ef6f-4a58-b802-6b3056a626c5
 
 ✅ 3.5 zapis danych lokalnie (CoreData)
 
-❌ 4.0 pobieranie dodatkowo zamówień (minimum 5 pól, w tym jedna relacja)
+✅ 4.0 pobieranie dodatkowo zamówień (minimum 5 pól, w tym jedna relacja)
 
 ❌ 4.5 wyświetlanie produktów oraz ich kategorii na dwóch osobnych listach
 
@@ -64,14 +64,16 @@ https://github.com/user-attachments/assets/3b03345e-418e-4de3-a7ef-e64d089e3a2b
 
 ## Zadanie 5 - Oauth
 
-3.0 logowanie przez aplikację serwerową
+✅ 3.0 logowanie przez aplikację serwerową
 
-3.5 rejestracja przez aplikację serwerową
+✅ 3.5 rejestracja przez aplikację serwerową
 
-4.0 logowanie via Google OAuth2
+❌ 4.0 logowanie via Google OAuth2
 
-4.5 logowanie via Facebook lub Github OAuth2
+❌ 4.5 logowanie via Facebook lub Github OAuth2
 
-5.0 zapisywanie danych logowania OAuth2 po stronie serwera
+❌ 5.0 zapisywanie danych logowania OAuth2 po stronie serwera
+
+https://github.com/user-attachments/assets/221826ae-0f7e-4214-9992-29d4b5159fd9
 
 
