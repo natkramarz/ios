@@ -76,4 +76,21 @@ https://github.com/user-attachments/assets/3b03345e-418e-4de3-a7ef-e64d089e3a2b
 
 https://github.com/user-attachments/assets/221826ae-0f7e-4214-9992-29d4b5159fd9
 
+Zadanie 6 - Płatności
+
+✅ 3.0 formularz płatności oraz mockowanie przez aplikację serwerową
+
+✅ 3.5 model płatności lokalnie
+
+❌ 4.0 lista zakupionych (opłaconych) produktów + model
+
+❌ 4.5 wdrożenie stripe'a
+
+❌ 5.0 dodanie skanowania kart
+
+https://github.com/user-attachments/assets/d7bd2f4f-a771-45d9-bdae-849cab9fb153
+
+
+
+
 
