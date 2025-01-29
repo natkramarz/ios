@@ -91,6 +91,16 @@ Zadanie 6 - Płatności
 https://github.com/user-attachments/assets/d7bd2f4f-a771-45d9-bdae-849cab9fb153
 
 
+Zad 7 Testy
 
+✅ 3.0 stworzyć 30 asercji testów funkcjonalnych
 
+❌ 3.5 stworzyć dodatkowo 20 asercji testów jednostkowych
 
+❌ 4.0 stworzyć mocki modelu produktów
+
+❌ 4.5 stworzyć mocki modelu kategorii
+
+❌ 5.0 dodać fixturki
+
+[Plik z testami](https://github.com/natkramarz/ios/blob/main/TestApp/TestAppUITests/TestAppUITests.swift)
