@@ -61,6 +61,7 @@ class Payment(BaseModel):
 
 class Order(BaseModel):
     id: ID
+    customer_id: ID
     items: dict[ID, int]
     payment: Payment
     created_at: DateTime
@@ -124,6 +125,7 @@ class PaymentResponse(BaseModel):
 
 class OrderResponse(BaseModel):
     id: str
+    customer_id: ID
     items: dict[str, int]
     payment: PaymentResponse
     created_at: DateTime
@@ -134,6 +136,7 @@ async def place_order(order: Order):
     orders.append(order)
     return {
                 "id": str(order.id),
+                "customer_id": str(order.id), 
                 "items": {str(key): value for key, value in order.items.items()},
                 "payment": {
                     "id": str(order.payment.id),
@@ -150,6 +153,7 @@ async def get_orders():
         "orders": [
             {
                 "id": str(order.id),
+                "customer_id": str(order.id), 
                 "items": {str(key): value for key, value in order.items.items()},
                 "payment": {
                     "id": str(order.payment.id),

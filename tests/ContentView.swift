@@ -7,38 +7,29 @@ struct CartView: View {
     
     var body: some View {
         NavigationStack {
-                let totalCost = cart.items.reduce(Decimal(0)) { result, pair in
-                    let (product, count) = pair
-                    return result + (product.wrappedPrice * Decimal(count))
-                }
-
-                VStack {
-                    List {
-                        ForEach(Array(cart.items), id: \.key) { (product, count) in
-                            HStack {
-                                Text(product.wrappedName)
-                                Spacer()
-                                Text("Price: \(String(format: "%.2f", Double(truncating: product.wrappedPrice * Decimal(count) as NSNumber)))$")
-                            }
+            let totalCost = cart.items.reduce(Decimal(0)) { result, pair in
+                let (product, count) = pair
+                return result + (product.wrappedPrice * Decimal(count))
+            }
+            
+            VStack {
+                List {
+                    ForEach(Array(cart.items), id: \.key) { (product, count) in
+                        HStack {
+                            Text(product.wrappedName)
+                            Spacer()
+                            Text("Price: \(String(format: "%.2f", Double(truncating: product.wrappedPrice * Decimal(count) as NSNumber)))$")
                         }
                     }
-
-                    Spacer()
-
-                    Text("Total: \(String(format: "%.2f", Double(truncating: totalCost as NSNumber)))$")
-                        .font(.headline)
-                        .padding()
-                    NavigationLink(destination: CheckoutView()) {
-                        Text("Checkout")
-                            .font(.headline)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-//                        Task {
-//                            await placeOrder()
-//                        }
+                }
+                
+                Spacer()
+                
+                Text("Total: \(String(format: "%.2f", Double(truncating: totalCost as NSNumber)))$")
+                    .font(.headline)
+                    .padding()
+                NavigationLink("Check out") {
+                    CheckoutView()
                 }
                 .navigationTitle("Your Cart")
                 .alert("Thank you!", isPresented: $showingConfirmation) {
@@ -47,32 +38,6 @@ struct CartView: View {
                     Text(confirmationMessage)
                 }
             }
-    }
-    
-    func placeOrder() async {
-        var apiItems: [String: Int] = [:]
-        for (product, quantity) in cart.items {
-            let id = product.id
-            apiItems[id] = quantity
-        }
-        let order = Order(items: apiItems)
-        guard let encoded = try? JSONEncoder().encode(order) else {
-            print("Failed to encode order")
-            return
-        }
-        
-        let url = URL(string: "http://127.0.0.1:8000/orders")!
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        
-        do {
-            let (data, _) = try await URLSession.shared.upload(for: request, from: encoded)
-            let decodedOrder = try JSONDecoder().decode(Order.self, from: data)
-            confirmationMessage = "Your order \(decodedOrder.id) is on its way!"
-            showingConfirmation = true
-        } catch {
-            print("Checkout failed: \(error.localizedDescription)")
         }
     }
 }

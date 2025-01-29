@@ -2,7 +2,7 @@ import SwiftUI
 import CoreData
 
 @main
-struct shopping_listApp: App {
+struct ShoppingListApp: App {
     @StateObject private var dataController = DataController()
     @StateObject var cart = ShoppingCart()
     @StateObject private var sessionManager = SessionManager()
